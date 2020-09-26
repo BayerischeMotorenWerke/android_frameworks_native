@@ -139,8 +139,16 @@ status_t GraphicBufferAllocator::allocateHelper(uint32_t width, uint32_t height,
     usage &= ~static_cast<uint64_t>((1 << 10) | (1 << 13));
 #endif
 
-    status_t error = mAllocator->allocate(requestorName, width, height, format, layerCount, usage,
-                                          1, stride, handle, importBuffer);
+    status_t error;
+    {
+        // TODO(b/169449588) restore original behavior instead of always setting
+        //     flag back to zero
+        // TODO(b/158870657) assert error once all devices use scudo
+        (void)mallopt(M_THREAD_DISABLE_MEM_INIT, 1);
+        error = mAllocator->allocate(requestorName, width, height, format, layerCount, usage, 1, stride, handle, importBuffer);
+        (void)mallopt(M_THREAD_DISABLE_MEM_INIT, 0);
+    }
+
     if (error != NO_ERROR) {
         ALOGE("Failed to allocate (%u x %u) layerCount %u format %d "
               "usage %" PRIx64 ": %d",
