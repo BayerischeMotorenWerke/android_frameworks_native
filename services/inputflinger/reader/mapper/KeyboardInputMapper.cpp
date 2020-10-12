@@ -353,7 +353,8 @@ void KeyboardInputMapper::processKey(nsecs_t when, bool down, int32_t scanCode, 
 
     NotifyKeyArgs args(getContext()->getNextId(), when, getDeviceId(), mSource, getDisplayId(),
                        policyFlags, down ? AKEY_EVENT_ACTION_DOWN : AKEY_EVENT_ACTION_UP,
-                       AKEY_EVENT_FLAG_FROM_SYSTEM, keyCode, scanCode, keyMetaState, downTime);
+                       AKEY_EVENT_FLAG_FROM_SYSTEM, getAdjustedKeyCode(keyCode),
+                       scanCode, keyMetaState, downTime);
     getListener()->notifyKey(&args);
 }
 
