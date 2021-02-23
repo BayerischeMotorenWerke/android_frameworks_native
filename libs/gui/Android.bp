@@ -124,6 +124,10 @@ cc_defaults {
     lto: {
         thin: true,
     },
+
+    lto: {
+        thin: true,
+    },
 }
 
 // Used by media codec services exclusively as a static lib for
